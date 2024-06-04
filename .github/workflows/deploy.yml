@@ -29,14 +29,14 @@ jobs:
             context: .
             file: ./Dockerfile
             build-args: |
-              SUPABASE_URL=${SUPABASE_URL}
-              SUPABASE_KEY=${SUPABASE_KEY}
-              DATABASE_HOST=${DATABASE_HOST}
-              DATABASE_USER=${DATABASE_USER}
-              DATABASE_NAME=${DATABASE_NAME}
-              DATABASE_PORT=${DATABASE_PORT}
-              DATABASE_PASSWORD=${DATABASE_PASSWORD}
-              PRODUCTION=${PRODUCTION}
+              SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+              SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
+              DATABASE_HOST=${{ secrets.DATABASE_HOST }}
+              DATABASE_USER=${{ secrets.DATABASE_USER }}
+              DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+              DATABASE_PORT=${{ secrets.DATABASE_PORT }}
+              DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+              PRODUCTION=${{ secrets.PRODUCTION }}
             tags: erlanggaak/${{ secrets.IMAGE_NAME }}:latest
 
     deploy:
