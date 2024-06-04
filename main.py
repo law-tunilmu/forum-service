@@ -33,7 +33,8 @@ async def create_question(question: schemas.QuestionCreate, supa_client: AsyncCl
         db_question = question.model_dump()
         result = await supa_client.table(QUESTION_TABLE_NAME).insert(db_question).execute()
         return result.data[0]
-    except supabase.PostgrestAPIError:
+    except supabase.PostgrestAPIError as e:
+        print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @app.get("/questions/", response_model=list[schemas.Question])
@@ -44,6 +45,7 @@ async def get_questions(skip: int = 0, limit: int = Query(default=10, alias="pag
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
         return result.data
     except supabase.PostgrestAPIError as e:
+        print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @app.get("/questions/{question_id}", response_model=schemas.Question)
@@ -53,7 +55,8 @@ async def get_question(question_id: int, supa_client: AsyncClient = Depends(supa
         if result is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
         return result.data
-    except supabase.PostgrestAPIError:
+    except supabase.PostgrestAPIError as e:
+        print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @app.post("/answers/", response_model=schemas.Answer)
@@ -76,7 +79,8 @@ async def get_answers(question_id: int, skip: int = 0, limit: int = Query(defaul
     try:
         result = await supa_client.table(ANSWER_TABLE_NAME).select(SELECT_COLUMNS_ANSWER).eq("question_id", question_id).range(skip, skip + limit - 1).execute()
         return result.data
-    except supabase.PostgrestAPIError:
+    except supabase.PostgrestAPIError as e:
+        print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @app.post("/comments/", response_model=schemas.Comment)
@@ -90,7 +94,8 @@ async def create_comment(comment: schemas.CommentCreate, supa_client: AsyncClien
         db_comment = comment.model_dump()
         result = await supa_client.table(COMMENT_TABLE_NAME).insert(db_comment).execute()
         return result.data[0]
-    except supabase.PostgrestAPIError:
+    except supabase.PostgrestAPIError as e:
+        print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @app.get("/comments/", response_model=list[schemas.Comment])
@@ -98,5 +103,6 @@ async def get_comments(answer_id: int, skip: int = 0, limit: int = Query(default
     try:
         result = await supa_client.table(COMMENT_TABLE_NAME).select(SELECT_COLUMNS_COMMENT).eq("answer_id", answer_id).range(skip, skip + limit - 1).execute()
         return result.data
-    except supabase.PostgrestAPIError:
+    except supabase.PostgrestAPIError as e:
+        print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
