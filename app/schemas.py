@@ -11,7 +11,7 @@ class UserBase(BaseModel):
     role: USER_ROLES
 
 class User(UserBase):
-    id: int
+    username: str
 
     class Config:
         from_attributes = True
@@ -21,11 +21,11 @@ class QuestionBase(BaseModel):
     content: str
 
 class QuestionCreate(QuestionBase):
-    owner_id: Optional[int] = None
+    owner: Optional[str] = None
 
 class Question(QuestionBase):
     id: int
-    owner_id: Optional[int] = None
+    owner: Optional[str] = None
     created_at: str
 
     class Config:
@@ -36,12 +36,12 @@ class AnswerBase(BaseModel):
 
 class AnswerCreate(AnswerBase):
     question_id: int
-    owner_id: Optional[int] = None
+    owner: Optional[str] = None
 
 class Answer(AnswerBase):
     id: int
     question_id: int
-    owner_id: Optional[int] = None
+    owner: Optional[str] = None
     created_at: str
 
     class Config:
@@ -52,12 +52,12 @@ class CommentBase(BaseModel):
 
 class CommentCreate(CommentBase):
     answer_id: int
-    owner_id: Optional[int] = None
+    owner: Optional[str] = None
 
 class Comment(CommentBase):
     id: int
     answer_id: int
-    owner_id: Optional[int] = None
+    owner: Optional[str] = None
     created_at: str
 
     class Config:

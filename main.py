@@ -40,7 +40,8 @@ async def create_question(question: schemas.QuestionCreate, supa_client: AsyncCl
 async def get_questions(skip: int = 0, limit: int = Query(default=10, alias="page_size"), supa_client: AsyncClient = Depends(supa_async)):
     try:
         result = await supa_client.table(QUESTION_TABLE_NAME).select(SELECT_COLUMNS_QUESTION).range(skip, skip + limit - 1).execute()
-        print(result)
+        if result is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
         return result.data
     except supabase.PostgrestAPIError as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -49,7 +50,7 @@ async def get_questions(skip: int = 0, limit: int = Query(default=10, alias="pag
 async def get_question(question_id: int, supa_client: AsyncClient = Depends(supa_async)):
     try:
         result = await supa_client.table(QUESTION_TABLE_NAME).select(SELECT_COLUMNS_QUESTION).eq("id", question_id).maybe_single().execute()
-        if not result.data:
+        if result is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
         return result.data
     except supabase.PostgrestAPIError:
