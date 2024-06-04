@@ -8,12 +8,14 @@ from supabase.lib.client_options import ClientOptions
 
 async def supa_async() -> AsyncClient:
     dotenv.load_dotenv()
+    print(os.getenv("SUPABASE_URL"))
+    print(os.getenv("SUPABASE_KEY"))
     supa_client = AsyncClient(
-        os.getenv("SUPABASE_KEY"),
+        os.getenv("SUPABASE_URL"),
         os.getenv("SUPABASE_KEY")
     )
     if not os.environ.get('PRODUCTION', False):
-        supa_client.rest_url = os.getenv("SUPABASE_KEY")
+        supa_client.rest_url = os.getenv("SUPABASE_URL")
         
         schema = os.environ.get("SUPABSE_SCHEMA", "public")
         supa_client.options = ClientOptions(schema=schema)
